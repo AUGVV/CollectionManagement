@@ -6,6 +6,8 @@ namespace DataBaseMigrator.Entity.Elements
     {
         public long ElementId { get; set; }
 
+        public virtual Element Element { get; set; } = null!;
+
         public string Text { get; set; }
 
         public long AuthorId { get; set; }

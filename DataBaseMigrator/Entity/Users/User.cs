@@ -2,24 +2,22 @@
 {
     public class User : BaseEntity<long>
     {
-        public string FirstName { get; set; }
+        public string Nickname { get; set; } = null!;
 
-        public string LastName { get; set; }
+        public string Email { get; set; }
 
-        public DateTime Birth { get; set; }
+        public string Password { get; set; }
 
         public DateTime CreationDate { get; set; }
 
-        public string RefreshToken { get; set; }
-
-        public DateTime RefreshTokenExpirationDate { get; set; }
+        public string RefreshToken { get; set; } = null!;
 
         public bool IsVerified { get; set; }
 
-        public string VerificationCode { get; set; }
+        public string VerificationCode { get; set; } = null!;
 
-        public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = [];
 
-        public ICollection<UserConfig> UserConfig { get; set; }
+        public ICollection<UserConfig> UserConfig { get; set; } = [];
     }
 }

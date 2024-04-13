@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataBaseMigrator.Entity.Elements;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseMigrator.Context.Configs.Elements
 {
-    internal class PartConfigs
+    public class PartConfigs : IEntityTypeConfiguration<Part>
     {
+        public void Configure(EntityTypeBuilder<Part> builder)
+        {
+
+
+
+
+        }
     }
 }

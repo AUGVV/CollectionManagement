@@ -6,6 +6,8 @@ namespace DataBaseMigrator.Entity.Users
     {
         public long UserId { get; set; }
 
-        public RoleType ConfigType { get; set; }
+        public virtual User User { get; set; } = null!;
+
+        public RoleType Role { get; set; }
     }
 }

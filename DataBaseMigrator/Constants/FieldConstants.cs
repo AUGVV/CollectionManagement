@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataBaseMigrator.Constants
+﻿namespace DataBaseMigrator.Constants
 {
-    internal class FieldConstants
+    public static class FieldConstants
     {
+        public static int MaxTextLength = 1000;
+        public static int NameFieldsLength = 50;
     }
 }

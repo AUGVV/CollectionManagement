@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using DataBaseMigrator.Entity.Users.Types;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using DataBaseMigrator.Entity.Users;
 
 namespace DataBaseMigrator.Context.Configs.Users
 {
-    internal class UserRoleConfigs
+    public class UserRoleConfigs : IEntityTypeConfiguration<UserRole>
     {
+        public void Configure(EntityTypeBuilder<UserRole> builder)
+        {
+            builder.Property(it => it.Role)
+                .IsRequired()
+                .HasDefaultValue(RoleType.User);
+        }
     }
 }

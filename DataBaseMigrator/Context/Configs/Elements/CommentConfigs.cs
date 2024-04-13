@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataBaseMigrator.Entity.Elements;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseMigrator.Context.Configs.Elements
 {
-    internal class CommentConfigs
+    public class CommentConfigs : IEntityTypeConfiguration<Comment>
     {
+        public void Configure(EntityTypeBuilder<Comment> builder)
+        {
+        }
     }
 }

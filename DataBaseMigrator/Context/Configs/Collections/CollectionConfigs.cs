@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataBaseMigrator.Entity.Collections;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseMigrator.Context.Configs.Collections
 {
-    internal class CollectionConfigs
+    public class CollectionConfigs : IEntityTypeConfiguration<Collection>
     {
+        public void Configure(EntityTypeBuilder<Collection> builder)
+        {
+        }
     }
 }

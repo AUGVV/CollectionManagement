@@ -1,10 +1,16 @@
-﻿using CollectionManagement.Options;
+﻿using CollectionManagement.Behavior;
+using CollectionManagement.Middleware;
+using CollectionManagement.Options;
+using CollectionManagement.Services;
+using DataBaseMigrator.Context;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace CollectionManagementAPI
 {
@@ -23,6 +29,10 @@ namespace CollectionManagementAPI
             services.AddEndpointsApiExplorer();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
 
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(connectionString, _ => { }));
+
+            services.AddHttpContextAccessor();
             services.AddSwaggerGen(opt =>
             {
                
@@ -30,8 +40,21 @@ namespace CollectionManagementAPI
                 {
                     In = ParameterLocation.Header,
                     Description = "type jwt here",
-                    Name = "Auth",
+                    Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
+                });
+                opt.CustomSchemaIds(type =>
+                {
+                    if (type.IsGenericType)
+                    {
+                        return new Regex("`\\d")
+                            .Replace(type.ToString()
+                                .Replace("+", "_")
+                                .Replace("[", "_")
+                                .Replace("]", string.Empty),
+                                string.Empty);
+                    }
+                    return type.FullName.Replace("+", "-");
                 });
                 opt.AddSecurityRequirement(
                     new OpenApiSecurityRequirement
@@ -48,33 +71,42 @@ namespace CollectionManagementAPI
                     } });
              });
 
-            var jwtOptions = configuration.GetSection("JwtAuth").Get<JwtCredentialsOptions>();
+            services.Configure<JwtCredentialsOptions>(configuration.GetSection(nameof(JwtCredentialsOptions)));
+            var jwtOptions = configuration.GetSection(nameof(JwtCredentialsOptions)).Get<JwtCredentialsOptions>();
 
-            services.AddAuthentication(option =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(option =>
             {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(option =>
-            {
+                option.RequireHttpsMetadata = false;
                 option.SaveToken = true;
                 option.TokenValidationParameters = new TokenValidationParameters
                 {
                     SaveSigninToken = true,
                     ValidateIssuer = true,
-                    ValidateAudience = false,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtOptions.Key))
                 };
             });
+
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddScoped<IAuthContext, AuthContext>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<ExceptionMiddleware>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection()
+               .UseMiddleware<ExceptionMiddleware>()
                .UseRouting()
+              // .UseAuthentication()
                .UseAuthorization()
                .UseSwagger()
                .UseSwaggerUI()

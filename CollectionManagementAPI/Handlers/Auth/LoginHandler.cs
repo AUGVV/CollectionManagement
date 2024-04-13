@@ -1,37 +1,42 @@
-﻿using CollectionManagement.Models.Users;
+﻿using CollectionManagement.Models.Auth;
+using CollectionManagement.Models.Users;
+using CollectionManagement.Services;
+using DataBaseMigrator.Context;
 using MediatR;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollectionManagement.Handlers.Auth
 {
     public class LoginHandler
     {
-        public class Request : Login, IRequest<string>
+        public class Request : Login, IRequest<TokensModel>
         {
         }
 
-        public class Handler : IRequestHandler<Request, string>
+        public class Handler : IRequestHandler<Request, TokensModel>
         {
-            public Handler()
+            private readonly IAuthService authService;
+            private readonly DataBaseContext dataBaseContext;
+
+            public Handler(DataBaseContext dataBaseContext, IAuthService authService)
             {
+                this.authService = authService;
+                this.dataBaseContext = dataBaseContext;
             }
 
-            public async Task<string> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<TokensModel> Handle(Request request, CancellationToken cancellationToken)
             {
+                var user = await dataBaseContext.Users
+                    .SingleAsync(it => it.Email == request.Email && it.Password == request.Password, cancellationToken);
 
-                var jwt = new JwtSecurityToken(
-                    issuer: "mr test",
-                    audience: "blah",
-                    claims: new List<Claim> { new Claim(ClaimTypes.Name, "i dont know i dont care") },
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("VNIASDOrtdsjhtaehg4w3yghrsjrtsah554N")), SecurityAlgorithms.HmacSha256));
+                user.RefreshToken = authService.CreateJwtToken(user.Id, true);
+                await dataBaseContext.SaveChangesAsync(cancellationToken);
 
-                return new JwtSecurityTokenHandler().WriteToken(jwt);
+                return new TokensModel
+                {
+                    AccessToken = authService.CreateJwtToken(user.Id),
+                    RefreshToken = user.RefreshToken
+                };
             }       
         }
     }
