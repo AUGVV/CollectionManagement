@@ -7,6 +7,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionManagementAPI", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseMigrator", "DataBaseMigrator\DataBaseMigrator.csproj", "{707D1EC3-1F41-49EC-A07D-04355E6634AA}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "collection-management-app", "collection-management-app\", "{2138AF6B-5CEB-4470-AE99-6D503BE11C29}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_54114"
+		Debug.AspNetCompiler.PhysicalPath = "collection-management-app\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_54114\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_54114"
+		Release.AspNetCompiler.PhysicalPath = "collection-management-app\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_54114\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "54114"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +41,10 @@ Global
 		{707D1EC3-1F41-49EC-A07D-04355E6634AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{707D1EC3-1F41-49EC-A07D-04355E6634AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{707D1EC3-1F41-49EC-A07D-04355E6634AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2138AF6B-5CEB-4470-AE99-6D503BE11C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2138AF6B-5CEB-4470-AE99-6D503BE11C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2138AF6B-5CEB-4470-AE99-6D503BE11C29}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{2138AF6B-5CEB-4470-AE99-6D503BE11C29}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
