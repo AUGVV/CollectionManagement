@@ -30,6 +30,11 @@ namespace CollectionManagement.Middleware
                     context.Response.Clear();
                     context.Response.StatusCode = 401;
                 }
+                else if (exception is NotFoundException)
+                {
+                    context.Response.Clear();
+                    context.Response.StatusCode = 404;
+                }
                 else
                 {
                     context.Response.Clear();

@@ -2,5 +2,6 @@
 {
     public class UpdateUser
     {
+        public string Nickname { get; set; }
     }
 }

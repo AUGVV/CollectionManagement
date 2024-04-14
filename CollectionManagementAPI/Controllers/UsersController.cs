@@ -1,64 +1,162 @@
-﻿using CollectionManagement.Controllers;
+﻿using CollectionManagement.Attributes;
+using CollectionManagement.Controllers;
+using CollectionManagement.Handlers.Users;
+using CollectionManagement.Models.Base;
+using CollectionManagement.Models.Users;
+using CollectionManagement.Services;
+using DataBaseMigrator.Entity.Users.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CollectionManagementAPI.Controllers
 {
-
-    public class UsersController : BaseController
+    public class UsersController(IMediator mediator, IAuthContext authContext) : BaseController(mediator)
     {
-        public UsersController(IMediator mediator)
-            : base(mediator)
-        {
-        }
+        private readonly IAuthContext authContext = authContext;
 
         [HttpGet]
-        public Task Get()
+        public async Task<GetUser> Get()
         {
-           return Task.CompletedTask;
+            return await Mediator.Send(new GetUserHandler.Request
+            {
+                UserId = authContext.UserId
+            });
         }
-        /*
+
+        [IsAdmin]
+        [HttpGet("{userId}")]
+        public async Task<GetUser> Get([FromRoute] long userId)
+        {
+            return await Mediator.Send(new GetUserHandler.Request
+            {
+                UserId = userId
+            });
+        }
+
+        [IsAdmin]
         [HttpGet("get-users")]
-        public Task GetUsersList()
+        public async Task<Paginator<GetUser>> GetUsersList([FromQuery] GetUsersHandler.Request request)
         {
-            return Task.CompletedTask;
+            return await Mediator.Send(request);
         }
 
-        [HttpPut("add-admin-role")]
-        public async Task<string> AddAdminRole([FromBody] LoginHandler.Request request)
+        [IsAdmin]
+        [HttpPut("set-admin-role/{userId}")]
+        public async Task<IActionResult> SetAdminRole([FromRoute] long userId)
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserRoleHandler.Request()
+            {
+                CurrentUserId = authContext.UserId,
+                RoleType = SettingType.Admin,
+                UserId = userId
+            });
+            return new NoContentResult();
         }
 
-        [HttpPut("remove-admin-role")]
-        public async Task<string> RemoveAdminRole([FromBody] LoginHandler.Request request)
+        [IsAdmin]
+        [HttpPut("set-user-role/{userId}")]
+        public async Task<IActionResult> SetUserRole([FromRoute] long userId)
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserRoleHandler.Request()
+            {
+                CurrentUserId = authContext.UserId,
+                RoleType = SettingType.User,
+                UserId = userId
+            });
+            return new NoContentResult();
         }
 
-        [HttpPut("block")]
-        public async Task<string> Block([FromBody] LoginHandler.Request request)
+        [IsAdmin]
+        [HttpPut("set-block-role/{userId}")]
+        public async Task<IActionResult> SetBlockRole([FromRoute] long userId)
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserRoleHandler.Request()
+            {
+                CurrentUserId = authContext.UserId,
+                RoleType = SettingType.Blocked,
+                UserId = userId
+            });
+            return new NoContentResult();
         }
 
-        [HttpPut("unblock")]
-        public async Task<string> Unblock([FromBody] LoginHandler.Request request)
+        [HttpPut("set-light-mode")]
+        public async Task<IActionResult> SetLigtMode()
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserSettingsHandler.Request()
+            {
+                ConfigType = ConfigType.Theme,
+                Value = "Light",
+                UserId = authContext.UserId
+            });
+            return new NoContentResult();
         }
 
-        [HttpPut("change-settings")]
-        public async Task<string> AcceptInvite([FromBody] LoginHandler.Request request)
+        [HttpPut("set-dark-mode")]
+        public async Task<IActionResult> SetDarkMode()
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserSettingsHandler.Request()
+            {
+                ConfigType = ConfigType.Theme,
+                Value = "Dark",
+                UserId = authContext.UserId
+            });
+            return new NoContentResult();
         }
 
-        [HttpPut("remove-user")]
-        public async Task<string> RemoveUser([FromBody] LoginHandler.Request request)
+        [HttpPut("set-ru-mode")]
+        public async Task<IActionResult> SetRuMode()
         {
-            return await mediator.Send(request);
+            await Mediator.Send(new ChangeUserSettingsHandler.Request()
+            {
+                ConfigType = ConfigType.Language,
+                Value = "ru-RU",
+                UserId = authContext.UserId
+            });
+            return new NoContentResult();
         }
-        */
+
+        [HttpPut("set-en-mode")]
+        public async Task<IActionResult> SetEnMode()
+        {
+            await Mediator.Send(new ChangeUserSettingsHandler.Request()
+            {
+                ConfigType = ConfigType.Language,
+                Value = "en-US",
+                UserId = authContext.UserId
+            });
+            return new NoContentResult();
+        }
+
+        [HttpPost("update")]
+        public async Task<GetUser> UpdateUser([FromBody] UpdateUserMetadataHandler.Request request)
+        {
+            request.UserId = authContext.UserId;
+            return await Mediator.Send(request);
+        }
+
+        [IsAdmin]
+        [HttpPost("update/{userId}")]
+        public async Task<GetUser> UpdateUserByAdmin(
+            [FromRoute] long userId,
+            [FromBody] UpdateUser updateUser)
+        {
+            return await Mediator.Send(new UpdateUserMetadataHandler.Request()
+            {
+                UserId = userId,
+                Nickname = updateUser.Nickname
+            });
+        }
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] ChangePassword changePassword)
+        {
+            await Mediator.Send(new ChangePasswordHandler.Request()
+            {
+                UserId = authContext.UserId,
+                NewPassword = changePassword.NewPassword,
+                OldPassword = changePassword.OldPassword
+            });
+            return new NoContentResult();
+        }
     }
 }

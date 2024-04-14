@@ -8,6 +8,6 @@ namespace DataBaseMigrator.Entity.Users
 
         public virtual User User { get; set; } = null!;
 
-        public RoleType Role { get; set; }
+        public SettingType Role { get; set; }
     }
 }

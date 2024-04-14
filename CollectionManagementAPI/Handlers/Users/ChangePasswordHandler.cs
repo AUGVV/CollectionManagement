@@ -1,19 +1,15 @@
-﻿using DataBaseMigrator.Context;
-using DataBaseMigrator.Entity.Users.Types;
+﻿using CollectionManagement.Models.Users;
+using DataBaseMigrator.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CollectionManagement.Handlers.Users
 {
-    public class ChangeUserSettingsHandler
+    public class ChangePasswordHandler
     {
-        public class Request : IRequest<Unit>
+        public class Request : ChangePassword, IRequest<Unit>
         {
             public long UserId { get; set; }
-
-            public ConfigType ConfigType { get; set; }
-
-            public string Value { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Unit>
@@ -27,12 +23,8 @@ namespace CollectionManagement.Handlers.Users
 
             public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
             {
-                var user = await dataBaseContext.Users
-                    .Include(it => it.UserConfig)
-                    .SingleAsync(it => it.Id == request.UserId, cancellationToken);
-
-                var setting = user.UserConfig.Single(it => it.ConfigType == request.ConfigType);
-                setting.Value = request.Value;
+                var user = await dataBaseContext.Users.SingleAsync(it => it.Id == request.UserId, cancellationToken);
+                user.Password = request.NewPassword;
                 await dataBaseContext.SaveChangesAsync(cancellationToken);
 
                 return Unit.Value;

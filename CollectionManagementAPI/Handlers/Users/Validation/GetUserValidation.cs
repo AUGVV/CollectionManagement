@@ -2,27 +2,26 @@
 using CollectionManagement.Services;
 using FluentValidation;
 
-namespace CollectionManagement.Handlers.Auth.Validation
+namespace CollectionManagement.Handlers.Users.Validation
 {
-    public class LoginValidation : AbstractValidator<LoginHandler.Request>
+    public class GetUserValidation : AbstractValidator<GetUserHandler.Request>
     {
         private readonly IUserService userService;
 
-        public LoginValidation(IUserService userService)
+        public GetUserValidation(IUserService userService)
         {
             this.userService = userService;
 
-            RuleFor(it => it)
+            RuleFor(it => it.UserId)
                 .MustAsync(ThrowIfUserDoesNotExist);
         }
 
         private async Task<bool> ThrowIfUserDoesNotExist(
-            LoginHandler.Request request,
+            long userId,
             CancellationToken cancellationToken)
         {
-            var result = await userService.IsUserExistsByCredentials(
-                request.Email,
-                request.Password,
+            var result = await userService.IsAnyUserExists(
+                userId,
                 cancellationToken);
 
             if (!result)

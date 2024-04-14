@@ -1,43 +1,37 @@
-﻿using CollectionManagement.Models.Auth;
+﻿using AutoMapper;
 using CollectionManagement.Models.Users;
-using CollectionManagement.Services;
 using DataBaseMigrator.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CollectionManagement.Handlers.Auth
+namespace CollectionManagement.Handlers.Users
 {
     public class GetUserHandler
     {
-        public class Request : IRequest<TokensModel>
+        public class Request : IRequest<GetUser>
         {
             public long UserId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Request, TokensModel>
+        public class Handler : IRequestHandler<Request, GetUser>
         {
-            private readonly IAuthService authService;
             private readonly DataBaseContext dataBaseContext;
+            private readonly IMapper mapper;
 
-            public Handler(DataBaseContext dataBaseContext, IAuthService authService)
+            public Handler(DataBaseContext dataBaseContext, IMapper mapper)
             {
-                this.authService = authService;
                 this.dataBaseContext = dataBaseContext;
+                this.mapper = mapper;
             }
 
-            public async Task<TokensModel> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<GetUser> Handle(Request request, CancellationToken cancellationToken)
             {
                 var user = await dataBaseContext.Users
-                    .SingleAsync(it => it.Id == 1, cancellationToken);
+                    .Include(it => it.UserRoles)
+                    .Include(it => it.UserConfig)
+                    .SingleAsync(it => it.Id == request.UserId, cancellationToken);
 
-                user.RefreshToken = authService.CreateJwtToken(user.Id, true);
-                await dataBaseContext.SaveChangesAsync(cancellationToken);
-
-                return new TokensModel
-                {
-                    AccessToken = authService.CreateJwtToken(user.Id),
-                    RefreshToken = user.RefreshToken
-                };
+                 return mapper.Map<GetUser>(user);
             }
         }
     }

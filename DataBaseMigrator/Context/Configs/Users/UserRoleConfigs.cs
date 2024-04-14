@@ -11,7 +11,7 @@ namespace DataBaseMigrator.Context.Configs.Users
         {
             builder.Property(it => it.Role)
                 .IsRequired()
-                .HasDefaultValue(RoleType.User);
+                .HasDefaultValue(SettingType.User);
         }
     }
 }

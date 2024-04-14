@@ -37,16 +37,16 @@ namespace CollectionManagement.Handlers.Auth
                     Password = request.Password,
                     RefreshToken = null,
                     VerificationCode = "Code",
-                    UserRoles = [new UserRole { Role = RoleType.User }],
+                    UserRoles = [new UserRole { Role = SettingType.User }],
                     UserConfig =
                     [
                         new() {
                             ConfigType = ConfigType.Language,
-                            Value = "ru-RU"
+                            Value = "en-US"
                         },
                         new() {
                             ConfigType = ConfigType.Theme,
-                            Value = "light"
+                            Value = "Light"
                         }
                     ]
                 };

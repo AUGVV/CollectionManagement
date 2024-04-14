@@ -1,4 +1,6 @@
-﻿using CollectionManagement.Behavior;
+﻿using AutoMapper;
+using CollectionManagement.Behavior;
+using CollectionManagement.Mapper;
 using CollectionManagement.Middleware;
 using CollectionManagement.Options;
 using CollectionManagement.Services;
@@ -7,9 +9,9 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace CollectionManagementAPI
@@ -99,6 +101,11 @@ namespace CollectionManagementAPI
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<ExceptionMiddleware>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddAutoMapper(opt =>
+            {
+                opt.AddProfile(new UserAutoMapper());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,8 +113,8 @@ namespace CollectionManagementAPI
             app.UseHttpsRedirection()
                .UseMiddleware<ExceptionMiddleware>()
                .UseRouting()
-              // .UseAuthentication()
                .UseAuthorization()
+               .UseMiddleware<RoleCheckMiddleware>()
                .UseSwagger()
                .UseSwaggerUI()
                .UseEndpoints(endpoints =>

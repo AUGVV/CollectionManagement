@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CollectionManagement.Models.Users
+﻿namespace CollectionManagement.Models.Users
 {
     public class RegistrationModel
     {

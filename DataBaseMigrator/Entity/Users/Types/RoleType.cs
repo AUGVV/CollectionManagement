@@ -1,6 +1,6 @@
 ﻿namespace DataBaseMigrator.Entity.Users.Types
 {
-    public enum RoleType
+    public enum SettingType
     {
         None = 0, 
         User = 1,

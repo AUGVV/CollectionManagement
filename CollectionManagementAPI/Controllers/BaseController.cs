@@ -13,9 +13,9 @@ namespace CollectionManagement.Controllers
     {
         internal BaseController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this.Mediator = mediator;
         }
 
-        internal IMediator mediator { get; }
+        internal IMediator Mediator { get; }
     }
 }
