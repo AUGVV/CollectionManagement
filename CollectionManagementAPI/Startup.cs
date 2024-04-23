@@ -110,6 +110,11 @@ namespace CollectionManagementAPI
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+
             app.UseHttpsRedirection()
                .UseMiddleware<ExceptionMiddleware>()
                .UseRouting()

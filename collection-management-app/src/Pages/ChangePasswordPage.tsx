@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
-const RegistrationPage = () => {
+const ChangePasswordPage = () => {
     return (<>
         <ContainerAuth>
             <LoginBox>
-                <AuthInput minLength={1} maxLength={20} placeholder="Nickname" />
-                <AuthInput maxLength={50} placeholder="Email" />
-                <AuthInput minLength={8} maxLength={32} placeholder="Password" />
+                <AuthInput minLength={8} maxLength={32} placeholder="New password" />
+                <AuthInput minLength={8} maxLength={32} placeholder="Old password" />
+                <AuthInput minLength={8} maxLength={32} placeholder="Repeat old passsword" />
 
-                <AuthButton>Registration</AuthButton>
+                <AuthButton>Change</AuthButton>
             </LoginBox>
         </ContainerAuth>
     </>);
@@ -40,7 +40,7 @@ const LoginBox = styled.div
     background-color: #f0f9fb;
     padding: 20px;
     border-radius: 5px;
-    height: 208px;
+    height: 163px;
     width: 330px;
     margin-top: 120px;
     box-shadow: 4px 4px 12px 3px rgba(0, 0, 0, 0.2);
@@ -49,4 +49,4 @@ const LoginBox = styled.div
          margin-top: 0px;
          box-shadow: -1px 14px 12px 3px rgba(0, 0, 0, 0.2);
     }`
-export default RegistrationPage;
+export default ChangePasswordPage;
