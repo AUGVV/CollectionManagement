@@ -27,7 +27,9 @@ namespace CollectionManagement.Handlers.Auth
             public async Task<TokensModel> Handle(Request request, CancellationToken cancellationToken)
             {
                 var user = await dataBaseContext.Users
-                    .SingleAsync(it => it.Email == request.Email && it.Password == request.Password, cancellationToken);
+                    .SingleAsync(it => 
+                        it.Email.Equals(request.Email) 
+                        && it.Password.Equals(request.Password), cancellationToken);
 
                 user.RefreshToken = authService.CreateJwtToken(user.Id, true);
                 await dataBaseContext.SaveChangesAsync(cancellationToken);

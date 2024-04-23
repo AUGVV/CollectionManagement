@@ -7,7 +7,6 @@ interface Props {
     description: string;
 }
 
-
 const FieldDescription = ({ title, description }: Props) => {
     return (<>
         <FieldDescriptionContainer>
@@ -15,6 +14,5 @@ const FieldDescription = ({ title, description }: Props) => {
         </FieldDescriptionContainer>
     </>);
 }
-
 
 export default FieldDescription;

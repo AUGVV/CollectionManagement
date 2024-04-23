@@ -149,6 +149,20 @@ export class AdminUsersStore {
         }
     }
 
+     MapRoleToString(roleId: number): string {
+        if (roleId === 1) {
+                return "User";
+            }
+        else if (roleId === 2) {
+                return "Admin";
+            }
+        else if (roleId === 3) {
+                return "Banned";
+            }
+
+        return "undefined";
+    }
+
     @computed
     get GetTotalCount(): number {
         return this.totalCount / 10;
@@ -181,16 +195,8 @@ export class AdminUsersStore {
 
     @computed
     get GetUserRoleAsText(): string {
-        if (this.selectedUser?.role !== null) {
-            if (this.selectedUser?.role === 1) {
-                return "User";
-            }
-            else if (this.selectedUser?.role === 2) {
-                return "Admin";
-            }
-            else if (this.selectedUser?.role === 3) {
-                return "Banned";
-            }
+        if (this.selectedUser?.role !== null && this.selectedUser?.role !== undefined) {
+            return this.MapRoleToString(this.selectedUser?.role);
         }
 
         return "undefined";

@@ -5,7 +5,6 @@ import { adminUsersStore } from '../Stores/AdminUsersStore';
 import { useParams } from 'react-router-dom';
 import { editButtonStore } from '../Stores/EditButtonStore';
 
-import styled from 'styled-components';
 import userImage from '../Images/DefaultUser.png';
 import FieldDescription from './UserPage/FieldDescription';
 import FieldDescriptionContainer from './UserPage/StyledComponents/FieldDescriptionContainer';
@@ -16,6 +15,7 @@ import SaveButton from './UserPage/StyledComponents/SaveButton';
 import UserImageBig from './UserPage/StyledComponents/UserImageBig';
 import UserInfoContainer from './UserPage/StyledComponents/UserInfoContainer';
 import MetadataContainer from './UserPage/StyledComponents/MetadataContainer';
+import SelectBar from './UserPage/StyledComponents/SelectBar';
 
 const AdminUserPage = observer(() => {
     const { id } = useParams();
@@ -53,7 +53,7 @@ const AdminUserPage = observer(() => {
                 <EditButton />
                 <FieldDescriptionContainer>
                     <TitleText>Role:</TitleText>
-                    <SelectBar ref={roleRef} required>
+                    <SelectBar withMargin={true} ref={roleRef} required>
                         <option selected={adminUsersStore.GetUserRoleAsText === "User"} value={RoleType.User}>User</option>
                         <option selected={adminUsersStore.GetUserRoleAsText === "Admin"} value={RoleType.Admin}>Admin</option>
                         {bannedOption}
@@ -67,11 +67,5 @@ const AdminUserPage = observer(() => {
         </UserInfoContainer>
     </>);
 })
-
-const SelectBar = styled.select
-    `border-radius: 6px;
-     font-size: 15px;
-     margin-bottom: 15px;
-     margin-left: 5px;`
 
 export default AdminUserPage;

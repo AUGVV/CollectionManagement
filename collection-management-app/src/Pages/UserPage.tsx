@@ -5,7 +5,6 @@ import { usersStore } from '../Stores/UsersStore';
 import { useNavigate } from 'react-router-dom';
 import { editButtonStore } from '../Stores/EditButtonStore';
 
-import styled from 'styled-components';
 import userImage from '../Images/DefaultUser.png';
 import FieldDescription from './UserPage/FieldDescription';
 import FieldDescriptionContainer from './UserPage/StyledComponents/FieldDescriptionContainer';
@@ -14,6 +13,8 @@ import UserImageBig from './UserPage/StyledComponents/UserImageBig';
 import MetadataContainer from './UserPage/StyledComponents/MetadataContainer';
 import UserInfoContainer from './UserPage/StyledComponents/UserInfoContainer';
 import EditButton from './UserPage/EditButton';
+import SelectBar from './UserPage/StyledComponents/SelectBar';
+import ChangePasswordButton from './UserPage/StyledComponents/ChangePasswordButton';
 
 const UserPage = observer(() => {
     const themeRef = useRef<HTMLSelectElement>(null);
@@ -46,41 +47,21 @@ const UserPage = observer(() => {
                 <EditButton />
                 <FieldDescription title={'Role:'} description={authStore.GetUserRoleAsText} />
                 <FieldDescription title={'Created At:'} description={authStore.GetCreatedAt} />
-                <SelectBar ref={languageRef} required>
+                <SelectBar withMargin={false} ref={languageRef} required>
                     <option selected={authStore.GetLanguage === "en-US"} value="en-US">en-US(English)</option>
                     <option selected={authStore.GetLanguage === "ru-RU"} value="ru-RU">ru-RU(Русский)</option>
                 </SelectBar>
-                <SelectBar ref={themeRef} required>
+                <SelectBar withMargin={false} ref={themeRef} required>
                     <option selected={authStore.GetTheme === "Light"} value="Light">Light</option>
                     <option selected={authStore.GetTheme === "Dark"} value="Dark">Dark</option>
                 </SelectBar>
                 <FieldDescriptionContainer>
                     <SaveButton disabled={editButtonStore.isEditable} onClick={UpdateMetadata}>Save</SaveButton>
-                    <ChangePassword onClick={() => navigate("/ChangePassword")}>Change password</ChangePassword>
+                    <ChangePasswordButton onClick={() => navigate("/ChangePassword")}>Change password</ChangePasswordButton>
                 </FieldDescriptionContainer>
             </MetadataContainer>
         </UserInfoContainer>
     </>);
 })
-
-const SelectBar = styled.select
-    `border-radius: 6px;
-     font-size: 15px;
-     margin-bottom: 15px;`
-
-const ChangePassword = styled.button
-    `margin-bottom: 9px;
-     height: 30px;
-     border-color: #85858569;
-     border-radius: 4px;`
-
-const Input = styled.input
-    `margin-bottom: 9px;
-     height: 30px;
-     border-color: #1cd4eb69;
-     border-radius: 4px;
-     &:focus {
-         outline: 0px solid;
-     }`
 
 export default UserPage;

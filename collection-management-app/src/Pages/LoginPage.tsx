@@ -35,20 +35,21 @@ export const LoginPage = observer(() => {
 
     return (<>
         <ContainerAuth>
-            <LoginBox>
+            <LoginBox IsLoginContainer={true}>
                 <AuthInput
-                    IsAuthCompleted={authStore.authCompletedEffect}
+                    IsCorrect={authStore.authCompletedEffect}
                     onChange={changeCredFields}
                     ref={EmailInputRef}
                     maxLength={50}
                     placeholder="Email" />
                 <AuthInput
-                    IsAuthCompleted={authStore.authCompletedEffect}
+                    IsCorrect={authStore.authCompletedEffect}
                     onChange={changeCredFields}
                     ref={PasswordInputRef}
                     minLength={8}
                     maxLength={32}
-                    placeholder="Password" />
+                    placeholder="Password"
+                    type="password"/>
 
                 <AuthButton onClick={async () => await TryLogin()}>Log In</AuthButton>
             </LoginBox>

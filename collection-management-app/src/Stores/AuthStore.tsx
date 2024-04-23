@@ -143,6 +143,12 @@ export class AuthStore {
                 this.applicationAuthenticated = false;
                 sessionStorage.removeItem(StorageNames.TokenStorage);
             }
+            if (response.status === 401) {
+                var result = await this.TryToRefreshToken();
+                if (result) {
+                    this.Logout();
+                }
+            }
         }
     }
 

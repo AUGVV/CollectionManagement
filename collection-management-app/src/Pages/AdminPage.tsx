@@ -1,9 +1,12 @@
-import styled from "styled-components";
-import ReactPaginate from 'react-paginate';
 import { adminUsersStore } from '../Stores/AdminUsersStore';
 import { observer } from "mobx-react";
 import { useEffect } from 'react';
 import { Link } from "react-router-dom";
+
+import styled from "styled-components";
+import ReactPaginate from 'react-paginate';
+import UnorderedList from "./AdminPage/StyledComponents/UnorderedList";
+import ListContainer from "./AdminPage/StyledComponents/ListContainer";
 
 const AdminPage = observer(() => {
       useEffect(() => {
@@ -20,22 +23,22 @@ const AdminPage = observer(() => {
           const newOffset = event.selected + 1;
           await adminUsersStore.GetUsersForAdmin(newOffset, '');
       };
-
+    //TODO: Add search field
     return (<>
-        <AuthButtonsContainer>
+        <ListContainer>
             <UnorderedList>
                 {adminUsersStore.GetItems.map((item) => (
                     <>
                       <ListItem>
-                          <Link to={`User/${item.userId}`}>{item.nickname}</Link>
-                          <p>{item.role}</p>
-                          <p>{item.email}</p>
-                          <p>{item.creationDate}</p>
+                            <Link to={`User/${item.userId}`}>{item.nickname}</Link>
+                            <p>{adminUsersStore.MapRoleToString(item.role)}</p>
+                            <p>{item.email}</p>
+                            <p>{item.creationDate}</p>
                       </ListItem>
                     </>
                 ))}
             </UnorderedList>
-        </AuthButtonsContainer>
+        </ListContainer>
         <MyPaginate
           pageCount={adminUsersStore.GetTotalCount}
           forcePage={0}
@@ -81,9 +84,6 @@ const MyPaginate = styled(ReactPaginate).attrs({
   }
 `;
 
-const UnorderedList = styled.ul
-    `padding-inline-start: 0px;`
-
 const ListItem = styled.li
     `height: 60px;
      display: block;
@@ -91,20 +91,9 @@ const ListItem = styled.li
      text-align: left;
      display: grid;
      align-items: center;
-     grid-template-columns: repeat(4, minmax(0, 1fr));`
-
-const AuthButtonsContainer = styled.div
-    `height: 530px;
-     margin-top: 20px;
-     margin-left: 20px;
-     margin-right: 20px;
-     background-color: #f0f9fb;
-     box-shadow: inset -4px 6px 7px 3px rgba(0, 0, 0, 0.2);
-     border-color: rebeccapurple;
-     border: solid;
-     border-radius: 8px;
-     overflow: overlay;`
-
-
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     & a:first-child {
+        margin-left: 20px
+     }`
 
 export default AdminPage;
