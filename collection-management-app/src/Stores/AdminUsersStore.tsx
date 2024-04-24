@@ -21,12 +21,15 @@ export class AdminUsersStore {
     @observable
     selectedUser: UserModel | undefined;
 
+    @observable
+    currentPage: number = 0;
+
     @action
     async GetUsersForAdmin(pageNumber: number, search: string): Promise<void> {
         let tokens = await sessionStorage.getItem(StorageNames.TokenStorage);
         if (tokens !== null) {
             let tokenModel = JSON.parse(tokens) as TokenModel;
-            const response = await fetch(`${ApiRoutes.User.GetUsersAdmin}?pageNumber=${pageNumber}`, {
+            const response = await fetch(`${ApiRoutes.User.GetUsersAdmin}?pageNumber=${pageNumber}&search=${search}`, {
                 method: 'GET',
                 headers: {
                     'accept': 'application/json',

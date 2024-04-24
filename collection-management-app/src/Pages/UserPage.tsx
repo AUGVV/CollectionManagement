@@ -44,7 +44,7 @@ const UserPage = observer(() => {
             <UserImageBig src={userImage} />
             <MetadataContainer>
                 <FieldDescription title={'Email:'} description={authStore.GetUserEmail} />
-                <EditButton />
+                <EditButton isAdminUser={false} />
                 <FieldDescription title={'Role:'} description={authStore.GetUserRoleAsText} />
                 <FieldDescription title={'Created At:'} description={authStore.GetCreatedAt} />
                 <SelectBar withMargin={false} ref={languageRef} required>

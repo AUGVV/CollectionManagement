@@ -50,7 +50,7 @@ const AdminUserPage = observer(() => {
             <UserImageBig src={userImage} />
             <MetadataContainer>
                 <FieldDescription title={'Email:'} description={adminUsersStore.GetUserEmail} />
-                <EditButton />
+                <EditButton isAdminUser={true} />
                 <FieldDescriptionContainer>
                     <TitleText>Role:</TitleText>
                     <SelectBar withMargin={true} ref={roleRef} required>

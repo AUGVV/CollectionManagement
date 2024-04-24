@@ -1,16 +1,20 @@
 import { editButtonStore } from "../../Stores/EditButtonStore";
 import { adminUsersStore } from "../../Stores/AdminUsersStore";
 import { observer } from "mobx-react";
+import { authStore } from "../../Stores/AuthStore";
 
 import FieldDescriptionContainer from "./StyledComponents/FieldDescriptionContainer";
 import Description from "./StyledComponents/Description";
 import TitleText from "./StyledComponents/TitleText";
 import InputEditButton from "./StyledComponents/InputEditButton";
 import EditNicknameButton from "./StyledComponents/EditNicknameButton";
-import { authStore } from "../../Stores/AuthStore";
 
-const EditButton = observer(() => {
-    editButtonStore.setDefault(adminUsersStore?.selectedUser?.nickname ?? authStore.GetUserNickname);
+interface Props {
+    isAdminUser: boolean;
+}
+
+const EditButton = observer(({ isAdminUser }: Props) => {
+    editButtonStore.setDefault(isAdminUser ? adminUsersStore?.selectedUser?.nickname : authStore.GetUserNickname);
 
     function handleClick() {
         editButtonStore.setIsEditable(true)

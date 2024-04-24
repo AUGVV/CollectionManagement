@@ -1,14 +1,15 @@
+import { authStore } from './Stores/AuthStore';
+import { observer } from 'mobx-react';
+import { Route, Routes } from 'react-router-dom';
+
 import './App.css';
 import CustomHeader from './StyledComponents/CustomHeader';
 import AuthButtons from './Pages/MainPage/AuthButtons';
 import styled from 'styled-components';
-import { Route, Routes } from 'react-router-dom';
 import AdminPage from './Pages/AdminPage';
 import UserPage from './Pages/UserPage';
 import RegistrationPage from './Pages/RegistrationPage';
 import ChangePasswordPage from './Pages/ChangePasswordPage';
-import { authStore } from './Stores/AuthStore';
-import { observer } from 'mobx-react';
 import LoginedUser from './Pages/MainPage/LoginedUser';
 import UserMenu from './Pages/MainPage/UserMenu';
 import MainPage from './Pages/MainPage';
@@ -26,6 +27,8 @@ const App = observer(() => {
         : <AuthButtons />;
 
     let UserMenuElement = authStore.isSubMenuOpen && authStore.applicationAuthenticated ? (<UserMenu></UserMenu>) : (null);
+    let adminRoute = authStore.applicationAuthenticated && authStore.user?.role === 2 ? (<Route path="/Admin" element={<AdminPage />} />) : null;
+    let adminUserRoute = authStore.applicationAuthenticated && authStore.user?.role === 2 ? (<Route path='Admin/User/:id' element={<AdminUserPage />} />) : null;
 
     return (
         <>
@@ -38,10 +41,10 @@ const App = observer(() => {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/Login" element={<LoginPage />} />
                 <Route path="/Registration" element={<RegistrationPage />} />
-                <Route path="/Admin" element={<AdminPage />} />
+                {adminRoute}
                 <Route path="/User" element={<UserPage />} />
                 <Route path="/ChangePassword" element={<ChangePasswordPage />} />
-                <Route path='Admin/User/:id' element={<AdminUserPage />} />
+                {adminUserRoute}
             </Routes>
         </>
     );
