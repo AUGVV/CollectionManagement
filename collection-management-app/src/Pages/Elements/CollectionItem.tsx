@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import userImage from '../../Images/DefaultUser.png';
 import CollectionModel from "../../Models/CollectionModel";
@@ -28,28 +28,28 @@ const CollectionItem = (props: Props) => {
     const navigate = useNavigate();
     const [focused, setFocused] = useState(false)
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = useCallback(() => {
         setFocused(true);
-    }
+    }, [setFocused]);
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = useCallback(() => {
         setFocused(false);
-    }
+    }, [setFocused]);
 
-    return (<>
-        <Collections
-            onClick={() => props.isAdmin === undefined ? navigate(`/Collection/${props.item.id}`) : null}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}>
-            {props.isAdmin !== undefined && focused
-                ? <ToolboxShadow>
+    const CollectionContent = useMemo(() => {
+        if (props.isAdmin !== undefined && focused) {
+            return (
+                <ToolboxShadow>
                     <ViewButton onClick={() => props.viewHandle}>View</ViewButton>
                     <ToolboxContainer>
                         {props.isAdmin !== true ? <WhiteButton onClick={() => props.editHandle}>Edit</WhiteButton> : null}
                         <WhiteButton onClick={() => props.removeHandle}>Remove</WhiteButton>
                     </ToolboxContainer>
                 </ToolboxShadow>
-                : <>
+            );
+        } else {
+            return (
+                <>
                     <TopBlockContainer>
                         <CollectionImage src={userImage} />
                         <TitleContainer>
@@ -61,7 +61,16 @@ const CollectionItem = (props: Props) => {
                         <Description>{props.item.description}</Description>
                     </DescriptionContainer>
                 </>
-            }
+            );
+        }
+    }, [props.isAdmin, focused, props.item.title, props.item.collectionType, props.item.description, props.viewHandle, props.editHandle, props.removeHandle]);
+
+    return (<>
+        <Collections
+            onClick={() => props.isAdmin === undefined ? navigate(`/Collection/${props.item.id}`) : null}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}>
+            {CollectionContent}
         </Collections>
     </>);
 }
