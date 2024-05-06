@@ -1,4 +1,6 @@
-﻿using DataBaseMigrator.Context.Configs.Users;
+﻿using DataBaseMigrator.Context.Configs.Collections;
+using DataBaseMigrator.Context.Configs.Users;
+using DataBaseMigrator.Entity.Collections;
 using DataBaseMigrator.Entity.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,14 +18,16 @@ namespace DataBaseMigrator.Context
         public DbSet<UserConfig> UserConfigs { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
+        public DbSet<Collection> Collections { get; set; }
+        public DbSet<CollectionType> CollectionTypes { get; set; }
 
-     //   public DbSet<Tag> Tags { get; set; }
-     //   public DbSet<Collection> Collections { get; set; }
-     //   public DbSet<Element> Elements { get; set; }
-     //   public DbSet<Comment> Comments { get; set; }
-     //   public DbSet<Part> Parts { get; set; }
-     
-        
+        //   public DbSet<Tag> Tags { get; set; }
+        //   public DbSet<Collection> Collections { get; set; }
+        //   public DbSet<Element> Elements { get; set; }
+        //   public DbSet<Comment> Comments { get; set; }
+        //   public DbSet<Part> Parts { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
@@ -34,6 +38,9 @@ namespace DataBaseMigrator.Context
             modelBuilder.ApplyConfiguration(new UserConfigs());
             modelBuilder.ApplyConfiguration(new UserRoleConfigs());
             modelBuilder.ApplyConfiguration(new UserConfigConfigs());
+
+            modelBuilder.ApplyConfiguration(new CollectionConfigs());
+            modelBuilder.ApplyConfiguration(new CollectionTypeConfigs());
         }
     }
 }

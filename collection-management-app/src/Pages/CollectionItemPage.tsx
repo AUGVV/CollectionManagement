@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { collectionTypesStore } from "../Stores/CollectionTypesStore";
 import CollectionItem from "./Elements/CollectionItem";
 
-const MainPage = observer(() => {
+const CollectionItemPage = observer(() => {
     const searchRef = useRef<HTMLInputElement>(null);
     const typesRef = useRef<HTMLSelectElement>(null);
 
@@ -15,7 +15,6 @@ const MainPage = observer(() => {
             setTimeout(async () => {
                 await mainPageStore.GetTopItems();
                 await collectionTypesStore.GetTypes();
-                mainPageStore.currentPage = 0;
                 await mainPageStore.GetCollectionItems(1, '', NaN);
             }, 100);
         };
@@ -41,7 +40,7 @@ const MainPage = observer(() => {
                 ))}
             </Container>
             <OtherSearchContainer>
-            <Title>Other collections</Title>
+                <Title>Other collections</Title>
                 <SearchBar
                     ref={searchRef}
                     onChange={async () => await mainPageStore.GetCollectionItems(
@@ -60,7 +59,7 @@ const MainPage = observer(() => {
                     {collectionTypesStore.types.map((item) => (
                         <option value={item.id}>{item.name}</option>
                     ))}
-            </SelectBar>
+                </SelectBar>
             </OtherSearchContainer>
             <Container2>
                 {mainPageStore.items.map((item) => (
@@ -194,4 +193,4 @@ const Paginator2 = styled(ReactPaginate).attrs({
   }
 `;
 
-export default MainPage;
+export default CollectionItemPage;

@@ -1,4 +1,5 @@
-﻿using DataBaseMigrator.Entity.Collections;
+﻿using DataBaseMigrator.Constants;
+using DataBaseMigrator.Entity.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +9,9 @@ namespace DataBaseMigrator.Context.Configs.Collections
     {
         public void Configure(EntityTypeBuilder<CollectionType> builder)
         {
+            builder.Property(it => it.Name)
+                .IsRequired()
+                .HasMaxLength(FieldConstants.TitleFieldsLength);
         }
     }
 }

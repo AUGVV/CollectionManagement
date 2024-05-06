@@ -5,6 +5,7 @@ const UserInfoContainer = styled.div
      flex-direction: row;
      margin-left: 30px;
      margin-top: 30px;
+     margin-bottom: 10px;
      @media (max-width: 417px) {
         display: flex;
         flex-direction: column;
