@@ -114,7 +114,8 @@ const UserPage = observer(() => {
             {usersStore.items.map((item) => (
                 <CollectionItem
                     isAdmin={false}
-                    item={item} />
+                    item={item}
+                    viewHandle={() => { console.log(item.id) }} />
             ))}
         </Container2>
         <Paginator2

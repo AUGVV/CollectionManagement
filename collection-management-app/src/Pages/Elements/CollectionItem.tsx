@@ -17,11 +17,11 @@ import TopBlockContainer from "./StyledComponents/CollectionItem/TopBlockContain
 import CollectionImage from "./StyledComponents/CollectionItem/CollectionImage";
 
 type Props = {
-    item: CollectionModel
-    isAdmin?: boolean
-    removeHandle?: void
-    viewHandle?: void
-    editHandle?: void
+    item: CollectionModel,
+    isAdmin?: boolean | undefined,
+    removeHandle?: () => void | undefined,
+    viewHandle?: () => void | undefined,
+    editHandle?: () => void | undefined
 };
 
 const CollectionItem = (props: Props) => {
@@ -36,14 +36,32 @@ const CollectionItem = (props: Props) => {
         setFocused(false);
     }, [setFocused]);
 
+    const viewHandle = useCallback(() => {
+        if (props.viewHandle !== undefined) {
+            props.viewHandle();
+        }
+    }, [props])
+
+    const removeHandle = useCallback(() => {
+        if (props.removeHandle !== undefined) {
+            props.removeHandle();
+        }
+    }, [props])
+
+    const editHandle = useCallback(() => {
+        if (props.editHandle !== undefined) {
+            props.editHandle();
+        }
+    }, [props])
+
     const CollectionContent = useMemo(() => {
         if (props.isAdmin !== undefined && focused) {
             return (
                 <ToolboxShadow>
-                    <ViewButton onClick={() => props.viewHandle}>View</ViewButton>
+                    <ViewButton onClick={viewHandle}>View</ViewButton>
                     <ToolboxContainer>
-                        {props.isAdmin !== true ? <WhiteButton onClick={() => props.editHandle}>Edit</WhiteButton> : null}
-                        <WhiteButton onClick={() => props.removeHandle}>Remove</WhiteButton>
+                        {props.isAdmin !== true ? <WhiteButton onClick={editHandle}>Edit</WhiteButton> : null}
+                        <WhiteButton onClick={removeHandle}>Remove</WhiteButton>
                     </ToolboxContainer>
                 </ToolboxShadow>
             );
@@ -63,7 +81,7 @@ const CollectionItem = (props: Props) => {
                 </>
             );
         }
-    }, [props.isAdmin, focused, props.item.title, props.item.collectionType, props.item.description, props.viewHandle, props.editHandle, props.removeHandle]);
+    }, [editHandle, focused, props.isAdmin, props.item.collectionType, props.item.description, props.item.title, removeHandle, viewHandle]);
 
     return (<>
         <Collections
