@@ -24,7 +24,7 @@ type Props = {
     editHandle?: () => void | undefined
 };
 
-const CollectionItem = (props: Props) => {
+const CollectionItem = ({ item, isAdmin, removeHandle, viewHandle, editHandle }: Props) => {
     const navigate = useNavigate();
     const [focused, setFocused] = useState(false)
 
@@ -36,32 +36,32 @@ const CollectionItem = (props: Props) => {
         setFocused(false);
     }, [setFocused]);
 
-    const viewHandle = useCallback(() => {
-        if (props.viewHandle !== undefined) {
-            props.viewHandle();
+    const controlViewHandle = useCallback(() => {
+        if (viewHandle !== undefined) {
+            viewHandle();
         }
-    }, [props])
+    }, [viewHandle])
 
-    const removeHandle = useCallback(() => {
-        if (props.removeHandle !== undefined) {
-            props.removeHandle();
+    const controlRemoveHandle = useCallback(() => {
+        if (removeHandle !== undefined) {
+            removeHandle();
         }
-    }, [props])
+    }, [removeHandle])
 
-    const editHandle = useCallback(() => {
-        if (props.editHandle !== undefined) {
-            props.editHandle();
+    const controlEditHandle = useCallback(() => {
+        if (editHandle !== undefined) {
+            editHandle();
         }
-    }, [props])
+    }, [editHandle])
 
     const CollectionContent = useMemo(() => {
-        if (props.isAdmin !== undefined && focused) {
+        if (isAdmin !== undefined && focused) {
             return (
                 <ToolboxShadow>
-                    <ViewButton onClick={viewHandle}>View</ViewButton>
+                    <ViewButton onClick={controlViewHandle}>View</ViewButton>
                     <ToolboxContainer>
-                        {props.isAdmin !== true ? <WhiteButton onClick={editHandle}>Edit</WhiteButton> : null}
-                        <WhiteButton onClick={removeHandle}>Remove</WhiteButton>
+                        {isAdmin !== true ? <WhiteButton onClick={controlEditHandle}>Edit</WhiteButton> : null}
+                        <WhiteButton onClick={controlRemoveHandle}>Remove</WhiteButton>
                     </ToolboxContainer>
                 </ToolboxShadow>
             );
@@ -71,21 +71,21 @@ const CollectionItem = (props: Props) => {
                     <TopBlockContainer>
                         <CollectionImage src={userImage} />
                         <TitleContainer>
-                            <Title>{props.item.title}</Title>
-                            <Type>{props.item.collectionType}</Type>
+                            <Title>{item.title}</Title>
+                            <Type>{item.collectionType}</Type>
                         </TitleContainer>
                     </TopBlockContainer>
                     <DescriptionContainer>
-                        <Description>{props.item.description}</Description>
+                        <Description>{item.description}</Description>
                     </DescriptionContainer>
                 </>
             );
         }
-    }, [editHandle, focused, props.isAdmin, props.item.collectionType, props.item.description, props.item.title, removeHandle, viewHandle]);
+    }, [editHandle, focused, isAdmin, item.collectionType, item.description, item.title, removeHandle, viewHandle]);
 
     return (<>
         <Collections
-            onClick={() => props.isAdmin === undefined ? navigate(`/Collection/${props.item.id}`) : null}
+            onClick={() => isAdmin === undefined ? navigate(`/Collection/${item.id}`) : null}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}>
             {CollectionContent}

@@ -33,7 +33,7 @@ const MainPage = observer(() => {
             newOffset,
             searchRef.current!.value,
             Number(typesRef.current!.value));
-    }, [searchRef, typesRef]);
+    }, []);
 
     const handleSearchChange = useCallback(async () => {
         await mainPageStore.GetCollectionItems(
@@ -41,7 +41,7 @@ const MainPage = observer(() => {
             searchRef.current!.value,
             Number(typesRef.current!.value)
         );
-    }, [searchRef, typesRef]);
+    }, []);
 
     const handleTypeChange = useCallback(async () => {
         console.log(typesRef.current?.value);
@@ -50,7 +50,7 @@ const MainPage = observer(() => {
             searchRef.current!.value,
             Number(typesRef.current!.value)
         );
-    }, [searchRef, typesRef]);
+    }, []);
 
     return (<>
         <div>
