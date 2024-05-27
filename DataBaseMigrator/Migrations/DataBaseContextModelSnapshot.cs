@@ -22,6 +22,76 @@ namespace DataBaseMigrator.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DataBaseMigrator.Entity.Collections.Collection", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CollectionTypeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CommentsCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("CreatorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("LikesCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollectionTypeId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("Description");
+
+                    b.HasIndex("Title");
+
+                    b.ToTable("Collections");
+                });
+
+            modelBuilder.Entity("DataBaseMigrator.Entity.Collections.CollectionType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CollectionTypes");
+                });
+
             modelBuilder.Entity("DataBaseMigrator.Entity.Users.User", b =>
                 {
                     b.Property<long>("Id")
@@ -123,6 +193,25 @@ namespace DataBaseMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("DataBaseMigrator.Entity.Collections.Collection", b =>
+                {
+                    b.HasOne("DataBaseMigrator.Entity.Collections.CollectionType", "Type")
+                        .WithMany()
+                        .HasForeignKey("CollectionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataBaseMigrator.Entity.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("DataBaseMigrator.Entity.Users.UserConfig", b =>

@@ -1,6 +1,5 @@
-
 class UserModel {
-    userId: number,
+    userId: number;
     nickname: string;
     email: string;
     role: number;

@@ -22,5 +22,14 @@ export const ApiRoutes = {
         UpdateUser: `${Scope}/Users/update`,
         UpdateUserAdmin: (userId: number) => `${Scope}/Users/update/${userId}`,
         ChangePassword: `${Scope}/Users/change-password`,
+    },
+    Collections:
+    {
+        GetTopCollections: `${Scope}/Collections/get-top-collection-items`,
+        GetCollections: `${Scope}/Collections/get-collection-items`,
+        GetCollection: (collectionId: number) => `${Scope}/Collections/get-collection-item/${collectionId}`,
+        GetUserCollections: `${Scope}/Collections/get-user-collection-items`,
+        GetUserByAdminCollections: (userId: number) => `${Scope}/Collections/get-collection-items/${userId}`,
+        GetTypes: `${Scope}/Collections/get-type-items`,
     }
 } 

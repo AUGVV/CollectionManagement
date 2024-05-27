@@ -6,10 +6,56 @@ import UserModel from "../Models/UserModel";
 import ThemeType from "../Enums/ThemeType";
 import Language from "../Enums/Language";
 import { authStore } from "./AuthStore";
+import CollectionModel from "../Models/CollectionModel";
+import PaginatedCollectionsModel from "../Models/PaginatedCollectionsModel";
 
 export class UsersStore {
     constructor() {
         makeObservable(this);
+    }
+
+    @observable
+    items: CollectionModel[] = [];
+
+    @observable
+    totalCount: number = 0;
+
+    @observable
+    currentPage: number = 0;
+
+    @action
+    async GetCollectionItems(pageNumber: number, search: string, type: number): Promise<void> {
+        let tokens = sessionStorage.getItem(StorageNames.TokenStorage);
+        if (tokens !== null) {
+            let tokenModel = JSON.parse(tokens) as TokenModel;
+            let request = `${ApiRoutes.Collections.GetUserCollections}?pageNumber=${pageNumber}&search=${search}`;
+            if (!Number.isNaN(type)) {
+                request += `&collectionType=${type}`
+            }
+
+            const response = await fetch(request, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'Authorization': `BEARER ${tokenModel.accessToken}`,
+                },
+            })
+
+            if (response.status === 200) {
+                let result = await response.json() as PaginatedCollectionsModel;
+                this.items = result.items;
+                if (this.totalCount !== result.total) {
+                    this.currentPage = 0;
+                }
+                this.totalCount = result.total;
+            } else if (response.status === 401) {
+                let result = await authStore.TryToRefreshToken();
+                if (result) {
+                    await this.GetCollectionItems(pageNumber, search, type);
+                }
+            }
+        }
     }
 
     @action
@@ -51,9 +97,7 @@ export class UsersStore {
                 headers: {
                     'accept': 'application/json',
                     'Authorization': `BEARER ${tokenModel.accessToken}`,
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With'
+                    'Content-Type': 'application/json;charset=utf-8'
                 },
             });
 
@@ -120,6 +164,11 @@ export class UsersStore {
             }
         }
         return false;
+    }
+
+    @computed
+    get GetTotalCount(): number {
+        return this.totalCount / 10;
     }
 }
 

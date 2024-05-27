@@ -1,11 +1,14 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import { ApiRoutes } from "../Constants/ApiRoutes";
 import { StorageNames } from "../Constants/StorageNames";
+import { authStore } from "./AuthStore";
+
 import TokenModel from "../Models/TokenModel";
 import PaginatedUsersModel from "../Models/PaginatedUsersModel";
 import UserModel from "../Models/UserModel";
-import { authStore } from "./AuthStore";
 import RoleType from "../Enums/RoleType";
+import CollectionModel from "../Models/CollectionModel";
+import PaginatedCollectionsModel from "../Models/PaginatedCollectionsModel";
 
 export class AdminUsersStore {
     constructor() {
@@ -23,6 +26,15 @@ export class AdminUsersStore {
 
     @observable
     currentPage: number = 0;
+
+    @observable
+    userCollections: CollectionModel[] = [];
+
+    @observable
+    totalCollectionsCount: number = 0;
+
+    @observable
+    currentCollectionPage: number = 0;
 
     @action
     async GetUsersForAdmin(pageNumber: number, search: string): Promise<void> {
@@ -46,6 +58,41 @@ export class AdminUsersStore {
                 let result = await authStore.TryToRefreshToken();
                 if (result) {
                     await this.GetUsersForAdmin(pageNumber, search);
+                }
+            }
+        }
+    }
+
+    @action
+    async GetCollectionItems(pageNumber: number, search: string, type: number): Promise<void> {
+        let tokens = sessionStorage.getItem(StorageNames.TokenStorage);
+        if (tokens !== null) {
+            let tokenModel = JSON.parse(tokens) as TokenModel;
+            let request = `${ApiRoutes.Collections.GetUserByAdminCollections(this.selectedUser!.userId)}?pageNumber=${pageNumber}&search=${search}`;
+            if (!Number.isNaN(type)) {
+                request += `&collectionType=${type}`
+            }
+
+            const response = await fetch(request, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'Authorization': `BEARER ${tokenModel.accessToken}`,
+                },
+            })
+
+            if (response.status === 200) {
+                let result = await response.json() as PaginatedCollectionsModel;
+                this.userCollections = result.items;
+                if (this.totalCollectionsCount !== result.total) {
+                    this.currentCollectionPage = 0;
+                }
+                this.totalCollectionsCount = result.total;
+            } else if (response.status === 401) {
+                let result = await authStore.TryToRefreshToken();
+                if (result) {
+                    await this.GetCollectionItems(pageNumber, search, type);
                 }
             }
         }
@@ -203,6 +250,11 @@ export class AdminUsersStore {
         }
 
         return "undefined";
+    }
+
+    @computed
+    get GetCollectionsTotalCount(): number {
+        return this.totalCollectionsCount / 10;
     }
 }
 

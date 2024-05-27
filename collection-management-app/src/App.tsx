@@ -15,6 +15,7 @@ import UserMenu from './Pages/MainPage/UserMenu';
 import MainPage from './Pages/MainPage';
 import LoginPage from './Pages/LoginPage';
 import AdminUserPage from './Pages/AdminUserPage';
+import CollectionForAllPage from './Pages/CollectionForAllPage';
 
 const App = observer(() => {
 
@@ -45,6 +46,7 @@ const App = observer(() => {
                 <Route path="/User" element={<UserPage />} />
                 <Route path="/ChangePassword" element={<ChangePasswordPage />} />
                 {adminUserRoute}
+                <Route path="/Collection/:id" element={<CollectionForAllPage />} />
             </Routes>
         </>
     );
