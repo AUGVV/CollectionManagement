@@ -7,24 +7,29 @@ namespace DataBaseMigrator.Context.Configs.Users
 {
     public class UserConfigs : IEntityTypeConfiguration<User>
     {
+        const string Collation = "SQL_Latin1_General_CP1_CS_AS";
+
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.Property(it => it.Nickname)
                 .IsRequired()
-                .HasMaxLength(FieldConstants.NameFieldsLength);
+                .HasMaxLength(FieldConstants.NameFieldsLength)
+                .UseCollation(Collation);
 
             builder.Property(it => it.Email)
                 .IsRequired()
-                .HasMaxLength(FieldConstants.MaxTextLength);
-
+                .HasMaxLength(FieldConstants.MaxTextLength)
+                .UseCollation(Collation);
 
             builder.Property(it => it.Password)
                 .HasMaxLength(FieldConstants.MaxTextLength)
-                .IsRequired();
+                .IsRequired()
+                .UseCollation(Collation);
 
             builder.Property(it => it.RefreshToken)
                 .IsRequired(false)
-                .HasMaxLength(FieldConstants.MaxTextLength);
+                .HasMaxLength(FieldConstants.MaxTextLength)
+                .UseCollation(Collation);
 
             builder.Property(it => it.IsVerified)
                 .IsRequired();

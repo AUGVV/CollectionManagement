@@ -99,6 +99,7 @@ namespace CollectionManagementAPI
             services.AddScoped<IAuthContext, AuthContext>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICollectionService, CollectionService>();
             services.AddTransient<ExceptionMiddleware>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
@@ -110,6 +111,11 @@ namespace CollectionManagementAPI
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+
             app.UseHttpsRedirection()
                .UseMiddleware<ExceptionMiddleware>()
                .UseRouting()

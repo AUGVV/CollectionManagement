@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CollectionManagement.Services
 {
-    public class UserService : IUserService
+    public class UserService(DataBaseContext context) : IUserService
     {
-        private readonly DataBaseContext context;
-
-        public UserService(DataBaseContext context)
-        {
-            this.context = context;
-        }
+        private readonly DataBaseContext context = context;
 
         public async Task<bool> IsUserExists(long userId, CancellationToken cancellationToken)
         {
@@ -46,20 +41,20 @@ namespace CollectionManagement.Services
                 .Include(it => it.UserRoles)
                 .AnyAsync(it =>
                     it.Id == userId 
-                    && it.RefreshToken == token
+                    && it.RefreshToken.Equals(token)
                     && !it.UserRoles.Any(role => role.Role == SettingType.Blocked), 
                     cancellationToken);
         }
 
         public async Task<bool> IsUserUniqueByNickname(string nickname, CancellationToken cancellationToken)
         {
-            var result = await context.Users.AnyAsync(it => it.Nickname == nickname, cancellationToken);
+            var result = await context.Users.AnyAsync(it => it.Nickname.Equals(nickname), cancellationToken);
             return !result;
         }
 
         public async Task<bool> IsUserUniqueByEmail(string email, CancellationToken cancellationToken)
         {
-            var result = await context.Users.AnyAsync(it => it.Email == email, cancellationToken);
+            var result = await context.Users.AnyAsync(it => it.Email.Equals(email), cancellationToken);
             return !result;
         }
 
@@ -71,8 +66,8 @@ namespace CollectionManagement.Services
             return await context.Users
                 .Include(it => it.UserRoles)
                 .AnyAsync(it => 
-                    it.Email == email 
-                    && it.Password == password 
+                    it.Email.Equals(email)
+                    && it.Password.Equals(password)
                     && !it.UserRoles.Any(role => role.Role == SettingType.Blocked),
                     cancellationToken);
         }
@@ -86,7 +81,7 @@ namespace CollectionManagement.Services
                 .Include(it => it.UserRoles)
                 .AnyAsync(it =>
                     it.Id == userId
-                    && it.Password == password,
+                    && it.Password.Equals(password),
                     cancellationToken);
         }
     }
