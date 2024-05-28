@@ -26,17 +26,26 @@ export class MainPageStore {
 
     @action
     async GetTopItems(): Promise<void> {
-        const response = await fetch(`${ApiRoutes.Collections.GetTopCollections}`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-        })
+        try {
+            const response = await fetch(`${ApiRoutes.Collections.GetTopCollections}`, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+            })
 
-        if (response.status === 200) {
-            let result = await response.json() as PaginatedCollectionsModel;
-            this.topItems = result.items;
+            if (response.status === 200) {
+                let result = await response.json() as PaginatedCollectionsModel;
+                this.topItems = result.items;
+            }
+            else if (response.status === 500) {
+                window.location.replace("/Error");
+            }
+        }
+        catch
+        {
+            window.location.replace("/Error");
         }
     }
 

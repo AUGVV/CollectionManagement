@@ -4,6 +4,8 @@
     {
         Task<bool> IsCollectionTypeExist(long typeId, CancellationToken cancellationToken);
 
+        Task<bool> IsCollectionExist(long collectionId, CancellationToken cancellationToken);
+
         Task<bool> IsUserCollectionCreator(long collectionId, long userId, CancellationToken cancellationToken);
     }
 }

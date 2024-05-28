@@ -16,9 +16,9 @@ import MainPage from './Pages/MainPage';
 import LoginPage from './Pages/LoginPage';
 import AdminUserPage from './Pages/AdminUserPage';
 import CollectionForAllPage from './Pages/CollectionForAllPage';
+import ErrorPage from './Pages/ErrorPages/ErrorPage';
 
 const App = observer(() => {
-
     let AuthPanel = authStore.applicationAuthenticated
         ? <LoginedUser click={() => {
             authStore.isSubMenuOpen
@@ -27,16 +27,20 @@ const App = observer(() => {
         }} />
         : <AuthButtons />;
 
+    let Header = window.location.pathname.includes("Error")
+        ? null
+        : (<CustomHeader>
+            <HeaderText>Collections</HeaderText>
+            {AuthPanel}
+        </CustomHeader>);
+
     let UserMenuElement = authStore.isSubMenuOpen && authStore.applicationAuthenticated ? (<UserMenu></UserMenu>) : (null);
     let adminRoute = authStore.applicationAuthenticated && authStore.user?.role === 2 ? (<Route path="/Admin" element={<AdminPage />} />) : null;
     let adminUserRoute = authStore.applicationAuthenticated && authStore.user?.role === 2 ? (<Route path='Admin/User/:id' element={<AdminUserPage />} />) : null;
 
     return (
         <>
-            <CustomHeader>
-                <HeaderText>Collections</HeaderText>
-                {AuthPanel}
-            </CustomHeader>
+            {Header}
             {UserMenuElement}
             <Routes>
                 <Route path="/" element={<MainPage />} />
@@ -47,6 +51,7 @@ const App = observer(() => {
                 <Route path="/ChangePassword" element={<ChangePasswordPage />} />
                 {adminUserRoute}
                 <Route path="/Collection/:id" element={<CollectionForAllPage />} />
+                <Route path="/Error" element={<ErrorPage ErrorCode="500" />} />
             </Routes>
         </>
     );
