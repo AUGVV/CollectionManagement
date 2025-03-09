@@ -4,33 +4,45 @@ import { Route, Routes } from 'react-router-dom';
 
 import './App.css';
 import CustomHeader from './StyledComponents/CustomHeader';
-import AuthButtons from './Pages/MainPage/AuthButtons';
 import styled from 'styled-components';
 import AdminPage from './Pages/AdminPage';
 import UserPage from './Pages/UserPage';
-import RegistrationPage from './Pages/RegistrationPage';
-import ChangePasswordPage from './Pages/ChangePasswordPage';
 import LoginedUser from './Pages/MainPage/LoginedUser';
 import UserMenu from './Pages/MainPage/UserMenu';
 import MainPage from './Pages/MainPage';
-import LoginPage from './Pages/LoginPage';
 import AdminUserPage from './Pages/AdminUserPage';
 import CollectionForAllPage from './Pages/CollectionForAllPage';
 import ErrorPage from './Pages/ErrorPages/ErrorPage';
+import ItemPage from './Pages/ItemPage/ItemPage';
+import AuthorizationAndRegistrationBar from './Components/Header/Authorization/AuthorizationAndRegistrationBar';
+import { useRef } from 'react';
+import HeaderSearchBar from './Components/Header/Search/StyledComponents/HeaderSearchBar';
 
 const App = observer(() => {
+    const searchRef = useRef<HTMLInputElement>(null);
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter') {
+        }
+    };
+
+
     let AuthPanel = authStore.applicationAuthenticated
         ? <LoginedUser click={() => {
             authStore.isSubMenuOpen
                 ? authStore.SetIsMenuOpen(false)
                 : authStore.SetIsMenuOpen(true)
         }} />
-        : <AuthButtons />;
+        : <AuthorizationAndRegistrationBar />;
+
 
     let Header = window.location.pathname.includes("Error")
         ? null
         : (<CustomHeader>
             <HeaderText>Collections</HeaderText>
+            <HeaderSearchBar
+                ref={searchRef}
+                onKeyDown={handleKeyDown}
+                placeholder="Search by title or description"></HeaderSearchBar>
             {AuthPanel}
         </CustomHeader>);
 
@@ -44,11 +56,9 @@ const App = observer(() => {
             {UserMenuElement}
             <Routes>
                 <Route path="/" element={<MainPage />} />
-                <Route path="/Login" element={<LoginPage />} />
-                <Route path="/Registration" element={<RegistrationPage />} />
+                <Route path="/Item/:id" element={<ItemPage />} />
                 {adminRoute}
                 <Route path="/User" element={<UserPage />} />
-                <Route path="/ChangePassword" element={<ChangePasswordPage />} />
                 {adminUserRoute}
                 <Route path="/Collection/:id" element={<CollectionForAllPage />} />
                 <Route path="/Error" element={<ErrorPage ErrorCode="500" />} />
@@ -59,11 +69,16 @@ const App = observer(() => {
 
 const HeaderText = styled.h1
     `margin-left: 20px;
+    margin-bottom: 21px;
      font-size: 25px;
-     @media (max-width: 417px) {
+     @media (max-width: 730px) {
          margin-bottom: 2px;
          margin-top: 2px;
          margin-left: 0px;
      }`
 
 export default App;
+
+function setIsEditing(arg0: boolean) {
+    throw new Error('Function not implemented.');
+}

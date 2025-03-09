@@ -2,8 +2,8 @@ import { observer } from "mobx-react";
 import { authStore } from "../../Stores/AuthStore";
 
 import userImage from '../../Images/DefaultUser.png';
-import AuthButtonsContainer from "./StyledComponents/AuthButtonContainers";
 import UserImageBig from "./StyledComponents/UserImageBig";
+import AuthButtonsContainer from "../../Components/Header/Authorization/StyledComponents/AuthButtonContainers";
 
 type Props = {
     click: React.MouseEventHandler<HTMLDivElement>

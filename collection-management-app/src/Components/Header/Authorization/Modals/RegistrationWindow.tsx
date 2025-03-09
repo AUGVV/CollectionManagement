@@ -1,15 +1,21 @@
 import { observer } from "mobx-react";
-import { registrationFormStore } from "../Stores/RegistrationFormStore";
+import { registrationFormStore } from "../../../../Stores/RegistrationFormStore";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { authStore } from "../Stores/AuthStore";
 
-import ContainerAuth from "./LoginPage/StyledComponents/ContainerAuth";
+import ContainerAuth from "./StyledComponents/ContainerAuth";
 import AuthButton from "./StyledComponents/AuthButton";
-import AuthInput from "./StyledComponents/AuthInput";
-import LoginBox from "./LoginPage/StyledComponents/LoginBox";
+import AuthInput from "../../../../Pages/StyledComponents/AuthInput";
+import LoginBox from "./StyledComponents/LoginBox";
+import CloseButton from "./StyledComponents/CloseButton";
+import ModalHeader from "./StyledComponents/ModalHeader";
+import { authStore } from "../../../../Stores/AuthStore";
 
-const RegistrationPage = observer(() => {
+interface Props {
+    onClose: () => void;
+}
+
+const RegistrationPage = observer(({ onClose }: Props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,6 +27,9 @@ const RegistrationPage = observer(() => {
     return (<>
         <ContainerAuth>
             <LoginBox IsLoginContainer={false}>
+                <ModalHeader>
+                    <CloseButton onClick={onClose}>x</CloseButton>
+                </ModalHeader>
                 <AuthInput
                     IsCorrect={registrationFormStore.isNicknameValid}
                     onChange={(e) => registrationFormStore.setNickname(e.target.value)}

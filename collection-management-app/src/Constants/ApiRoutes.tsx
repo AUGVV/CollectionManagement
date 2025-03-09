@@ -7,6 +7,10 @@ export const ApiRoutes = {
         Refresh: `${Scope}/Auth/refresh`,
         Logout: `${Scope}/Auth/logout`,
     },
+    Tags: {
+        GetSuggestedTags: (tag: string) => `${Scope}/tags/get-suggested-tags/${tag}`,
+        GetPopularTags: `${Scope}/tags/get-popular-tags`,
+    },
     User:
     {
         GetUser: `${Scope}/Users`,
@@ -27,6 +31,7 @@ export const ApiRoutes = {
     {
         GetTopCollections: `${Scope}/Collections/get-top-collection-items`,
         GetCollections: `${Scope}/Collections/get-collection-items`,
+        LoadCollections: `${Scope}/Collections/load-collection-items`,
         GetCollection: (collectionId: number) => `${Scope}/Collections/get-collection-item/${collectionId}`,
         GetUserCollections: `${Scope}/Collections/get-user-collection-items`,
         GetUserByAdminCollections: (userId: number) => `${Scope}/Collections/get-collection-items/${userId}`,

@@ -1,6 +1,8 @@
 import { action, makeObservable, observable } from "mobx";
 import { ApiRoutes } from "../Constants/ApiRoutes";
+import { Headers } from "../Constants/Headers";
 import TypeItemsModel from "../Models/TypeItemsModel";
+import axios from "axios";
 
 export class CollectionTypesStore {
     constructor() {
@@ -12,16 +14,16 @@ export class CollectionTypesStore {
 
     @action
     async GetTypes(): Promise<void> {
-        const response = await fetch(`${ApiRoutes.Collections.GetTypes}`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
+
+        const response = await axios.get<TypeItemsModel[]>(
+            `${ApiRoutes.Collections.GetTypes}`,
+            {
+                headers: Headers.HeadersWithoutAuth
             },
-        })
+        );
 
         if (response.status === 200) {
-            this.types = await response.json() as TypeItemsModel[];
+            this.types = response.data;
         }
     }
 }

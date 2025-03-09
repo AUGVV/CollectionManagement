@@ -1,0 +1,21 @@
+﻿.InfinityScrollStyle {
+    border-radius: 9px;
+    border-left: 3px dotted black;
+    border-right: 3px dotted black;
+}
+
+.InfinityScrollItemStyle {
+    margin-bottom: 22px;
+}
+
+@media (max-width: 417px) {
+    .InfinityScrollStyle {
+        border-radius: 0px;
+        border-left: 0px;
+        border-right: 0px;
+    }
+
+    .InfinityScrollItemStyle {
+        margin-bottom: 0px;
+    }
+}

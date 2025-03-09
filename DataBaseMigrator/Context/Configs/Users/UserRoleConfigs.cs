@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using DataBaseMigrator.Entity.Users.Types;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using DataBaseMigrator.Entity.Users;
+using DataBaseMigrator.Entity.Users.Types;
 
 namespace DataBaseMigrator.Context.Configs.Users
 {

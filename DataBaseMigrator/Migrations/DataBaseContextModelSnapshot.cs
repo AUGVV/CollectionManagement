@@ -92,6 +92,49 @@ namespace DataBaseMigrator.Migrations
                     b.ToTable("CollectionTypes");
                 });
 
+            modelBuilder.Entity("DataBaseMigrator.Entity.Elements.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Count")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count")
+                        .HasDatabaseName("IX_tag_count");
+
+                    b.HasIndex("Value")
+                        .HasDatabaseName("IX_tag_value");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("DataBaseMigrator.Entity.Tags.CollectionTag", b =>
+                {
+                    b.Property<long>("CollectionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TagId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CollectionId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("CollectionTag");
+                });
+
             modelBuilder.Entity("DataBaseMigrator.Entity.Users.User", b =>
                 {
                     b.Property<long>("Id")
@@ -214,6 +257,25 @@ namespace DataBaseMigrator.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("DataBaseMigrator.Entity.Tags.CollectionTag", b =>
+                {
+                    b.HasOne("DataBaseMigrator.Entity.Collections.Collection", "Collection")
+                        .WithMany("Tags")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataBaseMigrator.Entity.Elements.Tag", "Tag")
+                        .WithMany("CollectionTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("DataBaseMigrator.Entity.Users.UserConfig", b =>
                 {
                     b.HasOne("DataBaseMigrator.Entity.Users.User", "User")
@@ -234,6 +296,16 @@ namespace DataBaseMigrator.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataBaseMigrator.Entity.Collections.Collection", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("DataBaseMigrator.Entity.Elements.Tag", b =>
+                {
+                    b.Navigation("CollectionTags");
                 });
 
             modelBuilder.Entity("DataBaseMigrator.Entity.Users.User", b =>

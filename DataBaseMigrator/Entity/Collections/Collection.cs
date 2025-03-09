@@ -1,4 +1,5 @@
 ﻿using DataBaseMigrator.Entity.Elements;
+using DataBaseMigrator.Entity.Tags;
 using DataBaseMigrator.Entity.Users;
 
 namespace DataBaseMigrator.Entity.Collections
@@ -27,6 +28,6 @@ namespace DataBaseMigrator.Entity.Collections
 
         public CollectionType Type { get; set; }
 
-        // public ICollection<Element> Elements { get; set; } = [];
+        public ICollection<CollectionTag> Tags { get; set; } = [];
     }
 }

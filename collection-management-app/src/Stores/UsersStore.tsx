@@ -8,6 +8,7 @@ import Language from "../Enums/Language";
 import { authStore } from "./AuthStore";
 import CollectionModel from "../Models/CollectionModel";
 import PaginatedCollectionsModel from "../Models/PaginatedCollectionsModel";
+import axios from "axios";
 
 export class UsersStore {
     constructor() {
@@ -33,22 +34,23 @@ export class UsersStore {
                 request += `&collectionType=${type}`
             }
 
-            const response = await fetch(request, {
-                method: 'GET',
-                headers: {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'Authorization': `BEARER ${tokenModel.accessToken}`,
+            const response = await axios.get<PaginatedCollectionsModel>(
+                request,
+                {
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json;charset=utf-8',
+                        'Authorization': `BEARER ${tokenModel.accessToken}`,
+                    },
                 },
-            })
+            );
 
             if (response.status === 200) {
-                let result = await response.json() as PaginatedCollectionsModel;
-                this.items = result.items;
-                if (this.totalCount !== result.total) {
+                this.items = response.data.items;
+                if (this.totalCount !== response.data.total) {
                     this.currentPage = 0;
                 }
-                this.totalCount = result.total;
+                this.totalCount = response.data.total;
             } else if (response.status === 401) {
                 let result = await authStore.TryToRefreshToken();
                 if (result) {

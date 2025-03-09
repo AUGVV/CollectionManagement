@@ -8,9 +8,9 @@ const LoginBox = styled.div<Props>
     `display: flex;
     flex-direction: column;
     background-color: #f0f9fb;
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
     border-radius: 5px;
-    height: ${(props) => props.IsLoginContainer ? `162px;` : `208px;`} 208px;
+    height: ${(props) => props.IsLoginContainer ? `192px;` : `248px;`} 208px;
     width: 330px;
     margin-top: 120px;
     box-shadow: 4px 4px 12px 3px rgba(0, 0, 0, 0.2);

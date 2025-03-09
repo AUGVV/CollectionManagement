@@ -10,7 +10,7 @@ const CollectionForAllPage = observer(() => {
     useEffect(() => {
         const fetch = async () => {
             setTimeout(async () => {
-                await collectionStore.GetCollectuons(Number(id));
+                await collectionStore.GetCollections(Number(id));
             }, 100);
         };
 

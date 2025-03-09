@@ -1,6 +1,8 @@
 import { action, makeObservable, observable } from "mobx";
 import { ApiRoutes } from "../Constants/ApiRoutes";
+import { Headers } from "../Constants/Headers";
 import CollectionModel from "../Models/CollectionModel";
+import axios from "axios";
 
 export class CollectionStore {
     constructor() {
@@ -11,18 +13,18 @@ export class CollectionStore {
     collection: CollectionModel | undefined;
 
     @action
-    async GetCollectuons(collectionId: number): Promise<void> {
+    async GetCollections(collectionId: number): Promise<void> {
         console.log(`${ApiRoutes.Collections.GetCollection(collectionId)}`);
-        const response = await fetch(`${ApiRoutes.Collections.GetCollection(collectionId)}`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
+
+        const response = await axios.get<CollectionModel>(
+            `${ApiRoutes.Collections.GetCollection(collectionId)}`,
+            {
+                headers: Headers.HeadersWithoutAuth
             },
-        })
+        );
 
         if (response.status === 200) {
-            this.collection = await response.json() as CollectionModel;
+            this.collection = response.data;
         }
         else if (response.status === 404) {
             window.location.replace("/");

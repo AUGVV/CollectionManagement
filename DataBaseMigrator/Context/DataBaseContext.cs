@@ -1,6 +1,9 @@
 ﻿using DataBaseMigrator.Context.Configs.Collections;
+using DataBaseMigrator.Context.Configs.Tags;
 using DataBaseMigrator.Context.Configs.Users;
 using DataBaseMigrator.Entity.Collections;
+using DataBaseMigrator.Entity.Elements;
+using DataBaseMigrator.Entity.Tags;
 using DataBaseMigrator.Entity.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +24,9 @@ namespace DataBaseMigrator.Context
         public DbSet<Collection> Collections { get; set; }
         public DbSet<CollectionType> CollectionTypes { get; set; }
 
-        //   public DbSet<Tag> Tags { get; set; }
+        public DbSet<CollectionTag> CollectionTag { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+
         //   public DbSet<Collection> Collections { get; set; }
         //   public DbSet<Element> Elements { get; set; }
         //   public DbSet<Comment> Comments { get; set; }
@@ -41,6 +46,9 @@ namespace DataBaseMigrator.Context
 
             modelBuilder.ApplyConfiguration(new CollectionConfigs());
             modelBuilder.ApplyConfiguration(new CollectionTypeConfigs());
+
+            modelBuilder.ApplyConfiguration(new CollectionTagConfigs());
+            modelBuilder.ApplyConfiguration(new TagConfigs());
         }
     }
 }

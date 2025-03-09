@@ -1,5 +1,5 @@
 class UserLookupModel {
-    userId: number,
+    userId: number;
     nickname: string;
 
     constructor(

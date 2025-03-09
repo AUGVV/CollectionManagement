@@ -1,13 +1,12 @@
-import { observer } from "mobx-react";
-import { changePasswordFormStore } from "../Stores/ChangePasswordFormStore";
-import { authStore } from "../Stores/AuthStore";
 import { useEffect } from "react";
+import AuthInput from "../../../Pages/StyledComponents/AuthInput";
+import { authStore } from "../../../Stores/AuthStore";
 import { useNavigate } from "react-router-dom";
-
-import LoginBox from "./LoginPage/StyledComponents/LoginBox";
-import AuthButton from "./StyledComponents/AuthButton";
-import AuthInput from "./StyledComponents/AuthInput";
-import ContainerAuth from "./LoginPage/StyledComponents/ContainerAuth";
+import { observer } from "mobx-react";
+import { changePasswordFormStore } from "../../../Stores/ChangePasswordFormStore";
+import LoginBox from "./Modals/StyledComponents/LoginBox";
+import AuthButton from "./Modals/StyledComponents/AuthButton";
+import ContainerAuth from "./Modals/StyledComponents/ContainerAuth";
 
 const ChangePasswordPage = observer(() => {
     const navigate = useNavigate();

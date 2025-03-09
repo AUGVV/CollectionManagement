@@ -7,5 +7,7 @@
 
         public static int TitleFieldsLength = 50;
         public static int DescriptionFieldsLength = 2000;
+
+        public static int TagFieldsLength = 50;
     }
 }

@@ -90,6 +90,13 @@ namespace CollectionManagementAPI.Controllers
             return await Mediator.Send(request);
         }
 
+        [AllowAnonymous]
+        [HttpGet("load-collection-items")]
+        public async Task<IEnumerable<GetCollectionModel>> LoadCollectionItems([FromQuery] LoadCollectionItemsHandler.Request request)
+        {
+            return await Mediator.Send(request);
+        }
+
         [HttpGet("get-user-collection-items")]
         public async Task<Paginator<GetCollectionModel>> GetUserCollectionItems([FromQuery] GetCollectionItemsHandler.Request request)
         {

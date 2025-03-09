@@ -1,8 +1,10 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import { ApiRoutes } from "../Constants/ApiRoutes";
+import { Headers } from "../Constants/Headers";
 import UserModel from "../Models/UserModel";
 import CollectionModel from "../Models/CollectionModel";
 import PaginatedCollectionsModel from "../Models/PaginatedCollectionsModel";
+import axios from "axios";
 
 export class MainPageStore {
     constructor() {
@@ -27,17 +29,15 @@ export class MainPageStore {
     @action
     async GetTopItems(): Promise<void> {
         try {
-            const response = await fetch(`${ApiRoutes.Collections.GetTopCollections}`, {
-                method: 'GET',
-                headers: {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/json;charset=utf-8'
+            const response = await axios.get<PaginatedCollectionsModel>(
+                `${ApiRoutes.Collections.GetTopCollections}`,
+                {
+                    headers: Headers.HeadersWithoutAuth
                 },
-            })
+            );
 
             if (response.status === 200) {
-                let result = await response.json() as PaginatedCollectionsModel;
-                this.topItems = result.items;
+                this.topItems = response.data.items;
             }
             else if (response.status === 500) {
                 window.location.replace("/Error");
@@ -56,21 +56,38 @@ export class MainPageStore {
             request += `&collectionType=${type}`
         }
 
-        const response = await fetch(request, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
+        const response = await axios.get<PaginatedCollectionsModel>(
+            request,
+            {
+                headers: Headers.HeadersWithoutAuth
             },
-        })
+        );
 
         if (response.status === 200) {
-            let result = await response.json() as PaginatedCollectionsModel;
-            this.items = result.items;
-            if (this.totalCount !== result.total) {
+            this.items = response.data.items;
+            if (this.totalCount !== response.data.total) {
                 this.currentPage = 0;
             }
-            this.totalCount = result.total;
+            this.totalCount = response.data.total;
+        }
+    }
+
+    @action
+    async LoadItems(firstElement: number, count: number, search: string, type: number): Promise<void> {
+        let request = `${ApiRoutes.Collections.LoadCollections}?firstElement=${firstElement}&count=${count}&search=${search}`;
+        if (!Number.isNaN(type)) {
+            request += `&collectionType=${type}`
+        }
+
+        const response = await axios.get<CollectionModel[]>(
+            request,
+            {
+                headers: Headers.HeadersWithoutAuth
+            },
+        );
+
+        if (response.status === 200) {
+            this.items = response.data;
         }
     }
 

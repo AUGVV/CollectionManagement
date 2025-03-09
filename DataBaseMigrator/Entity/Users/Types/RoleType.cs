@@ -2,7 +2,7 @@
 {
     public enum SettingType
     {
-        None = 0, 
+        None, 
         User = 1,
         Admin = 2,
         Blocked = 3
